@@ -1,14 +1,19 @@
 package retry.publish;
 
+import java.util.HashSet;
+import java.util.Set;
 import retry.attempt.Attempt;
 import retry.subscribe.RetrySubscribe;
 
-import java.util.HashSet;
-import java.util.Set;
-
+/**
+ * 被观察者
+ */
 public class RetryPublish {
 
-    private Set<RetrySubscribe> retrySubscribes = new HashSet<>();
+    /**
+     * 观察者
+     */
+    private final Set<RetrySubscribe> retrySubscribes = new HashSet<>();
 
     public synchronized void addRetrySubscribe(RetrySubscribe retryObserver) {
         retrySubscribes.add(retryObserver);

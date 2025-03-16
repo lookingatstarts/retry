@@ -1,3 +1,9 @@
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Test;
 import retry.Retry;
 import retry.RetryBuilder;
@@ -6,9 +12,6 @@ import retry.caller.FixedTimeAttemptCaller;
 import retry.strategy.StopStrategies;
 import retry.strategy.WaitStrategies;
 import retry.subscribe.RetrySubscribe;
-
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class RetryTest {
 
@@ -29,7 +32,7 @@ public class RetryTest {
                 .caller(new FixedTimeAttemptCaller<>(executorService, 2L, TimeUnit.SECONDS))
                 .retryIfResult(result -> result < 10L)
                 .retryIfExceptionOfType(IllegalArgumentException.class)
-                .retrySubscribe(new RetrySubscribe() {
+            .retrySubscribe(new RetrySubscribe() { // 监听重试
                     @Override
                     public <V> void onRetry(Attempt<V> attempt) {
                         System.out.println("第" + attempt.getAttemptTimes() + "次尝试");
