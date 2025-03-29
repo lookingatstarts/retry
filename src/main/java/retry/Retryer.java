@@ -18,17 +18,17 @@ public class Retryer<V> {
 
   private final AttemptCaller<V> caller;
   private final RetryObservable retryObservable;
-  private final Predicate<Attempt<V>> rejectionPredicates;
+  private final Predicate<Attempt<V>> attemptPredicate;
   private final StopStrategy stopStrategy;
   private final WaitStrategy waitStrategy;
   private final BlockStrategy blockStrategy;
 
   public Retryer(AttemptCaller<V> caller, RetryObservable retryObservable,
-      Predicate<Attempt<V>> rejectionPredicates, StopStrategy stopStrategy,
+      Predicate<Attempt<V>> attemptPredicate, StopStrategy stopStrategy,
       WaitStrategy waitStrategy, BlockStrategy blockStrategy) {
     this.caller = caller;
     this.retryObservable = retryObservable;
-    this.rejectionPredicates = rejectionPredicates;
+    this.attemptPredicate = attemptPredicate;
     this.stopStrategy = stopStrategy;
     this.waitStrategy = waitStrategy;
     this.blockStrategy = blockStrategy;
@@ -53,7 +53,7 @@ public class Retryer<V> {
       }
       // 通知
       retryObservable.notifyAll(attempt);
-      if (!rejectionPredicates.test(attempt)) {
+      if (!attemptPredicate.test(attempt)) {
         return attempt.get();
       }
       // 结束运行

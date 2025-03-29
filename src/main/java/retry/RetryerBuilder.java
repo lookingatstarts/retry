@@ -37,7 +37,7 @@ public class RetryerBuilder<V> {
   private StopStrategy stopStrategy;
   private WaitStrategy waitStrategy;
   private BlockStrategy blockStrategy;
-  private Predicate<Attempt<V>> rejectionPredicate = attempt -> false;
+  private Predicate<Attempt<V>> attemptPredicate = attempt -> false;
 
   public static <V> RetryerBuilder<V> newBuilder() {
     return new RetryerBuilder<V>();
@@ -95,12 +95,12 @@ public class RetryerBuilder<V> {
 
 
   public RetryerBuilder<V> retryIfException() {
-    rejectionPredicate = rejectionPredicate.or(new ExceptionClassPredicate<V>(Exception.class));
+    attemptPredicate = attemptPredicate.or(new ExceptionClassPredicate<V>(Exception.class));
     return this;
   }
 
   public RetryerBuilder<V> retryIfRuntimeException() {
-    rejectionPredicate = rejectionPredicate.or(
+    attemptPredicate = attemptPredicate.or(
         new ExceptionClassPredicate<V>(RuntimeException.class));
     return this;
   }
@@ -109,7 +109,7 @@ public class RetryerBuilder<V> {
     if (exceptionClass == null) {
       throw new IllegalArgumentException("exceptionClass must not be null");
     }
-    rejectionPredicate = rejectionPredicate.or(new ExceptionClassPredicate<>(exceptionClass));
+    attemptPredicate = attemptPredicate.or(new ExceptionClassPredicate<>(exceptionClass));
     return this;
   }
 
@@ -117,7 +117,7 @@ public class RetryerBuilder<V> {
     if (exceptionPredicate == null) {
       throw new IllegalArgumentException("exceptionPredicate must not be null");
     }
-    rejectionPredicate = rejectionPredicate.or(new ExceptionPredicate<V>(exceptionPredicate));
+    attemptPredicate = attemptPredicate.or(new ExceptionPredicate<V>(exceptionPredicate));
     return this;
   }
 
@@ -125,7 +125,7 @@ public class RetryerBuilder<V> {
     if (resultPredicate == null) {
       throw new IllegalArgumentException("resultPredicate must not be null");
     }
-    rejectionPredicate = rejectionPredicate.or(new ResultPredicate<V>(resultPredicate));
+    attemptPredicate = attemptPredicate.or(new ResultPredicate<V>(resultPredicate));
     return this;
   }
 
@@ -134,7 +134,7 @@ public class RetryerBuilder<V> {
     WaitStrategy theWaitStrategy = waitStrategy == null ? WaitStrategies.noWait() : waitStrategy;
     BlockStrategy theBlockStrategy =
         blockStrategy == null ? BlockStrategies.threadSleepStrategy() : blockStrategy;
-    return new Retryer<>(attemptCaller, retryObservable, rejectionPredicate,
+    return new Retryer<>(attemptCaller, retryObservable, attemptPredicate,
         theStopStrategy, theWaitStrategy, theBlockStrategy);
   }
 
