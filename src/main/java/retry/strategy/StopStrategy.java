@@ -1,12 +1,14 @@
 package retry.strategy;
 
-
 import retry.attempt.Attempt;
 
+/**
+ * 通知重试策略
+ */
 public interface StopStrategy {
 
-    /**
-     * @return true 停止执行，不重试了
-     */
-    boolean shouldStop(Attempt<?> failedAttempt);
+  /**
+   * 是否还进行重试
+   */
+  boolean shouldStop(Attempt<?> failedAttempt);
 }

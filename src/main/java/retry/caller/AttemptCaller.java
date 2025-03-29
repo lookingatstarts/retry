@@ -6,5 +6,8 @@ import java.util.concurrent.TimeoutException;
 
 public interface AttemptCaller<V> {
 
-    V call(Callable<V> callable) throws ExecutionException, TimeoutException, InterruptedException;
+  /**
+   * 响应中断
+   */
+  V call(Callable<V> callable) throws ExecutionException, TimeoutException, InterruptedException;
 }

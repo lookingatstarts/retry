@@ -14,20 +14,9 @@
  * limitations under the License.
  */
 
-package guava.retry;
+package retry.strategy;
 
-/**
- * A strategy used to decide how long to sleep before retrying after a failed attempt.
- *
- * @author JB
- */
-public interface WaitStrategy {
+public interface BlockStrategy {
 
-  /**
-   * Returns the time, in milliseconds, to sleep before retrying.
-   *
-   * @param failedAttempt the previous failed {@code Attempt}
-   * @return the sleep time before next attempt
-   */
-  long computeSleepTime(Attempt failedAttempt);
+  void block(long sleepTime) throws InterruptedException;
 }
